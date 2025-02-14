@@ -1,0 +1,94 @@
+<!-- book_ticket.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Movie Ticket</title>
+    <link rel="stylesheet" href="{{ url_for('customer_bp.static', filename='styles.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <h1>Welcome to BoxOffice</h1>
+        </div>
+    </header>
+    
+    <!-- Movie and Theater Table -->
+    <div class="container">
+        <aside class="sidebar">
+            <ul>
+                <li><a href="{{ url_for('customer_bp.book_ticket') }}">View Book Movie</a></li>
+                <li><a href="{{ url_for('customer_bp.cancel_ticket') }}">Cancel Movie</a></li>
+                <li><a href="{{ url_for('customer_bp.booking_history') }}">History</a></li>
+            </ul>
+        </aside>
+        <main class="main-content">
+            <div class="logout">
+                <p>Hi {{ user_name }} |</p>
+                <p><a href="/customer_home">Home</a> |</p>
+                <p><a href="/index">Logout</a></p>
+            </div>
+            <h1>Book Movie Ticket</h1>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+            <form method="POST">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Movie Name</th>
+                            <th>Theater Name</th>
+                            <th>Language</th>
+                            <th>Category</th>
+                            <th>Seat Capacity</th>
+                            <th>Price</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for movie_theater in movies_theaters %}
+                            <tr>
+                                <td>{{ movie_theater.movie_name }}</td>
+                                <td>{{ movie_theater.theater_name }}</td>
+                                <td>{{ movie_theater.language }}</td>
+                                <td>{{ movie_theater.category }}</td>
+                                <td>{{ movie_theater.seat_capacity }}</td>
+                                <td>{{ movie_theater.price_per_ticket }}</td>
+                                <td><input type="radio" name="movie_theater" value="{{ movie_theater.movie_name }}|{{ movie_theater.theater_name }}" required></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Date, Time, and Ticket Info -->
+                <div class="booking-fields">
+                    <div class="field">
+                        {{ form.date_of_booking.label }}<br>
+                        {{ form.date_of_booking() }}
+                    </div>
+                    <div class="field">
+                        {{ form.time_of_booking.label }}<br>
+                        {{ form.time_of_booking() }}
+                    </div>
+                    <div class="field">
+                        {{ form.no_of_tickets_required.label }}<br>
+                        {{ form.no_of_tickets_required() }}
+                    </div>
+                </div>
+
+                {{ form.submitBook() }}
+            </form>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>Copyright www.boxoffice.com</p>
+    </footer>
+</body>
+</html>
